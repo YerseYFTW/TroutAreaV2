@@ -30,6 +30,7 @@
 
 .date-concurent {
     height: 160px;
+    flex-direction: column;
 }
 
 /*.ora-data {

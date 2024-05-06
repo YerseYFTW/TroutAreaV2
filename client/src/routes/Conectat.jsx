@@ -179,6 +179,8 @@ function Conectat() { //formData
         //const grr = await numere();
        // setUpdatat(grr);
         //console.log(grr + i);
+        setNrMansa(prevNrMansa => prevNrMansa + 1); // Update nrMansa by the length of the data array
+        setEtape(prevEtape => prevEtape - 1);
       }
          //setRows([...rows, newRow]);
         
@@ -387,7 +389,7 @@ return (
             </div>
             <div className='etape-ramase'>
                 Etape ramase: {etape}<br></br>
-                Nr. mansa: {nrMansa}
+                Nr. next mansa: {nrMansa}
             </div>
         </div>
         <div className='column'>
