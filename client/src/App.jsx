@@ -9,6 +9,7 @@ import './App.css'
 
 function App({}) { //setFormData
   const navigate = useNavigate();
+  const [loginSignin,setLoginSignin] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [NrSector, setSector] = useState('');
   const [NumePrenume, setNumePrenume] = useState('');
@@ -47,6 +48,7 @@ function App({}) { //setFormData
       }
     };
     useEffect(() => {
+      console.log(loginSignin);
       const fetchCode = async () => {
         const comboResult = await fetchData();
         const codSecretValuee = comboResult.codSecretValue.toString();
@@ -61,42 +63,80 @@ function App({}) { //setFormData
     }, [NrSector]);
 
     
+  const changeForm = async () => {
+    setLoginSignin(!loginSignin);
+    console.log(loginSignin);
+
+  }
   
 
   const handleLoginSubmit = async (event) => {
-    event.preventDefault();
-    console.log("rere");
-    
+    console.log(loginSignin);
+    if(loginSignin == true){
+      event.preventDefault();
+      console.log("rere");
+      
 
-    console.log(inregistratValue == 'false');
-    console.log(typeof inregistratValue);
-    console.log(tempCode == CodSecret);
-    if(tempCode == CodSecret && inregistratValue == false){
-      setLoginLoading(true);
-      registerParticipant();
+      console.log(inregistratValue == 'false');
+      console.log(typeof inregistratValue);
+      console.log(tempCode == CodSecret);
+      if(tempCode == CodSecret && inregistratValue == false){
+        setLoginLoading(true);
+        registerParticipant();
 
-      localStorage.removeItem('storedStand');
-      localStorage.removeItem('storedNume');
-      localStorage.setItem('storedStand', NrSector);
-      localStorage.setItem('storedNume', NumePrenume);
+        localStorage.removeItem('storedStand');
+        localStorage.removeItem('storedNume');
+        localStorage.setItem('storedStand', NrSector);
+        localStorage.setItem('storedNume', NumePrenume);
 
-      // Simulate an API call or any asynchronous operation
-      setTimeout(() => {
-        
-        setLoginLoading(false);
-        //setFormData({NrSector, NumePrenume, CodSecret});
-        //PostgresService.insertUser(NumePrenume)
-        // Redirect to the "/conectat" route with form data as state
-        navigate('/con');
-      }, 2000); // Simulating loading for 2 seconds
+        // Simulate an API call or any asynchronous operation
+        setTimeout(() => {
+          alert(`Logged In!`);
+          
+          setLoginLoading(false);
+          //setFormData({NrSector, NumePrenume, CodSecret});
+          //PostgresService.insertUser(NumePrenume)
+          // Redirect to the "/conectat" route with form data as state
+          navigate('/con');
+        }, 2000); // Simulating loading for 2 seconds
+      }
+      else{
+        alert("Combinatia cod secret-nr sector incorectaaaaaaa");
+        setSector('');
+        setNumePrenume('');
+        setCodSecret('');
+      };
     }
     else{
-      alert("Combinatia cod secret-nr sector incorecta");
-      setSector('');
-      setNumePrenume('');
-      setCodSecret('');
-    };
+      console.log(tempCode == CodSecret && inregistratValue == true);
+      if(tempCode == CodSecret && inregistratValue == true){
+        event.preventDefault();
+        setLoginLoading(true);
+        //registerParticipant();
 
+        localStorage.removeItem('storedStand');
+        localStorage.removeItem('storedNume');
+        localStorage.setItem('storedStand', NrSector);
+        localStorage.setItem('storedNume', NumePrenume);
+
+        // Simulate an API call or any asynchronous operation
+        setTimeout(() => {
+          alert(`Logged In!`);
+          
+          setLoginLoading(false);
+          //setFormData({NrSector, NumePrenume, CodSecret});
+          //PostgresService.insertUser(NumePrenume)
+          // Redirect to the "/conectat" route with form data as state
+          navigate('/con');
+        }, 2000); // Simulating loading for 2 seconds
+      }
+      else{
+        alert("Combinatia cod secret-nr sector incorectahhhhhhhhhh");
+        setSector('');
+        setNumePrenume('');
+        setCodSecret('');
+      };
+  }
 
   }
   return (
@@ -122,6 +162,7 @@ function App({}) { //setFormData
                 required
               />
             </div>
+            {loginSignin && (
             <div className='numeprenume-input'>
               <label htmlFor="numeprenume">Nume si Prenume:</label>
               <input
@@ -132,6 +173,7 @@ function App({}) { //setFormData
                 required
               />
             </div>
+            )}
             <div className='password-input'>
               <label htmlFor="password">Cod secret:</label>
               <input
@@ -142,8 +184,10 @@ function App({}) { //setFormData
                 required
               />
             </div>
-            <button type="submit">{ loginLoading ? "Se activeaza" : "Activare cont" } </button>
+            <button type="submit">{ loginSignin ? "Activare Cont" : "Conectare" } </button>
+            
           </form>
+          <button onClick={changeForm}>{loginSignin ? "Spre Conectare" : "Spre Activare Cont"}</button>
         </div>
       </div>
        </>

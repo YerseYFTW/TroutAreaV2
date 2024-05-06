@@ -54,11 +54,7 @@ export class BackendService {
 
   @GenezioMethod()
   async getCode(stand: string): Promise<string> {
-    //await this.pool.query(
-    //  "CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY,name VARCHAR(255))"
-    //);
-    //console.log("PostgreSQL connection string:", process.env.NEON_POSTGRES_URL);
-    //await this.pool.query("INSERT INTO playing_with_neon (name,value) VALUES ($1,12)", [name]);
+  
     const result = await this.pool.query("select cod_privat, inregistrat from setup_standuri where stand=$1",[stand]);
 
     return JSON.stringify(result);
@@ -78,6 +74,31 @@ export class BackendService {
   
   }
 
+  @GenezioMethod()
+  async addEtapa(sector_start:string,standet:string,capturi_prop:string,capturi_adv:string,puncte:string,mentiuni_adv:string,cod_privat_adversar:string):Promise<string>{
+    try{
+      
+    const registerr = await this.pool.query("insert into rezultate_etape (sector_start,standet,capturi_proprii,capturi_adversar,puncte,mentiuni,cod_privat_adversar)values($1,$2,$3,$4,$5,$6,$7)",[sector_start,standet,capturi_prop,capturi_adv,puncte,mentiuni_adv,cod_privat_adversar]);
+    const adding = await this.pool.query("update participanti set capturi_total = capturi_total+$1, puncte_total = puncte_total +$2 where stand_start=$3",[capturi_prop,puncte,sector_start]);
+    return "etapa a fost inregistrata";
+    }catch(error){
+      console.error("Eroare la trimitere:", error);
+      return "eroare la trimitere"
+    }
+  }
+
+
+  @GenezioMethod()
+  async getMeciuri(sector_start:string):Promise<string>{
+    try{
+    const raspuns_meciuri = await this.pool.query("select * from rezultate_etape where sector_start=$1",[sector_start]);
+
+    return JSON.stringify(raspuns_meciuri.rows);
+  }catch(error){
+    console.error("Eroare la trimitere:", error);
+    return "eroare la trimitere"
+  }
+  }
 }
 
 /*

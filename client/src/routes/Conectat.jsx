@@ -3,12 +3,16 @@ import React, { useState,useEffect } from 'react';
 
 import './Conectat.css';
 import './Modal.css'; // Import CSS file for modal styles
+import { BackendService } from '@genezio-sdk/TroutAreaV2';
 //import { useLocation } from 'react-router-dom';
 //import { HelloWorldClass } from "@genezio-sdk/TroutArea";
 
-function Conectat({}) { //formData
+function Conectat() { //formData
     //const location = useLocation();
-    
+    const nrEtapeNEMOD = 13;
+    const nrStanduri = 40;
+    const [updatat,setUpdatat] = useState(false);
+    const [data, setData] = useState(null);
     const [rows, setRows] = useState([]);
     const [etape, setEtape] = useState(13);
     const [nrMansa, setNrMansa] = useState(1);
@@ -24,6 +28,12 @@ function Conectat({}) { //formData
     const [codSecretAdversar, setCodSecretAdversar] = useState('');
     const [storageStand,setStorageStand] = useState('');
     const [storageNume,setStorageNume] = useState('');
+    const [codSecretAdversarReal,setCodSecretAdversarReal] = useState('');
+    //const [meciuriLuate,setMeciuriLuate] = useState('');
+    //const [tempunu,setTempp] = useState(0);
+    //const [tempdoi,setTemppp] = useState(0);
+    
+    //const [numberr,setNumberr] = useState(0);
     
 
 
@@ -75,18 +85,247 @@ function Conectat({}) { //formData
 
       useEffect(()=>{  // when component mounts to get from local and put rows
        //const etape
+       //console.log("Fetching data...");
         const standToUse = localStorage.getItem('storedStand');
         setStorageStand(standToUse);
+        //console.log(standToUse);
         const numeToUse = localStorage.getItem('storedNume');
         setStorageNume(numeToUse);
-  
-      },[]); 
+
+        if(!data){
+          fetchRezultate();
+          //InsertRowsTakenSQL();
+        }
+        //if(data !=null && updatat == false){
+       //   InsertRowsTakenSQL();
+        //  setUpdatat(true);
+        //}
+         //fetchRezultate().then(()=>{
+         // console.log("rerereerere");
+         // console.log(meciuriLuate);
+        // });
+         
+                //ssetNumberr(numberr+1);
+        //console.log("useffect temp1:"+temp1);
+       // console.log(meciuriLuate);
+      }); 
+
+      const fetchRezultate = async () => {
+        
+        const toate_meciurile= await BackendService.getMeciuri(storageStand);
+        //console.log(toate_meciurile);
+        //setMeciuriLuate(toate_meciurile);
+        const response = JSON.parse(toate_meciurile);
+        setData(response);
+        console.log(response);
+        console.log(response.length);
+
+        const randuri = await InsertRowsTakenSQL(response);
+        console.log(randuri);
+        //console.log(meciuriLuate);
+        //return toate_meciurile;
+        
+    };
+  //useEffect(() => {
+      
+      //console.log(data);
+      
+  //},[data]);
+    //setNr(34);
+    
+
+      const fetchCodeReal = async () => {
+        try{
+        
+          const tempSecReal = await sectorToReal();
+          //console.log("TEMPPPPPPP CODEEEEE  "+ tempSecReal);
+          //console.log(typeof tempSecReal);
+          //console.log(tempSecReal);
+          //setActualSectorAdversar(tempSecReal);
+          //console.log(actualSectorAdversar);
+          const response = await BackendService.getCode(tempSecReal);
+          //console.log(response)
+          const jsonObject = JSON.parse(response);
+          const codSecretAdversar = jsonObject.rows[0].cod_privat;
+          //codtemp1 = codSecretAdversar.toString();
+          // Now you can compare codSecretAdversar with your local codSecretAdversar
+          //console.log("Retrieved cod_secret for sector:", codtemp1);
+          //setCodSecretAdversarReal(codtemp1);
+          //console.log(codSecretAdversarReal);
+          //return codSecretAdversar;
+          return codSecretAdversar;
+        
+      }catch{}
+      };
+
+     
+    
+    
+
+      const InsertRowsTakenSQL = async (datat) => {
+        console.log(datat.length);
+        for(let i=0;i<datat.length;i++){
+          const newRow = [
+            i+1, 
+            datat[i].standet,
+            datat[i].capturi_proprii,
+            datat[i].capturi_adversar,
+            datat[i].puncte,
+            datat[i].mentiuni,
+            //item.
+            //codSecretAdversar
+        ];
+        setRows(prevRows => [...prevRows, newRow]); // Append newRow to the existing rows
+        //const grr = await numere();
+       // setUpdatat(grr);
+        //console.log(grr + i);
+      }
+         //setRows([...rows, newRow]);
+        
+        //setIsModalOpen(false);
+        
+        return "randurile au fost inserate"
+      };
+
+      /*useEffect(() => {
+        try{
+        const fetchCode = async () => {
+          const comboResult = await fetchCodeReal();
+          const codSecretValuee = comboResult;
+          //console.log(typeof codSecretValuee);
+          //setCodSecretAdversarReal(codSecretValuee);
+          //const inregistratt = comboResult.inregistratBool;
+          //setInregistratValue(inregistratt);
+          console.log("Value of cod_privat:", codSecretValuee);
+          
+          //console.log("Value of inregistrat:", inregistratt);
+          return codSecretValuee;
+        }
+        }catch(error){
+          console.error('Error fetching code:', error);
+        };
+        fetchCode().then((codSecretValuee)=>{
+          setCodSecretAdversarReal(codSecretValuee);
+          console.log(codSecretAdversarReal);
+        });
+        
+      }, [sectorAdversar]);*/
+
+      useEffect(() => {
+        const fetchCode = async () => {
+          try {
+            const actualStand = await fetchCodeReal();
+            //console.log(actualStand);
+            //setActualSectorAdversar(actualStand);
+            const codSecretValuee = actualStand ;
+           // console.log("Value of cod_privat:", codSecretValuee);
+            setCodSecretAdversarReal(codSecretValuee);
+            return codSecretValuee;
+          } catch (error) {
+            console.error('Error fetching code:', error);
+          }
+        };
+      
+        // Call fetchCode and handle the returned value
+        fetchCode().then((codSecretValuee) => {
+          console.log(codSecretValuee); // This will log the updated value
+        });
+      }, [sectorAdversar]);
 
       const addRow = () => {
         if(etape!=0){
             setIsModalOpen(true);
         }
+      }
+
+    const sectorToReal = async () =>{
+
+        let sectorAdvNr = sectorAdversar.toString();//parseInt(
+        //let temp1 = 0;
+        //let temp2 = 0;
+        //console.log("sector adv: "+sectorAdvNr );
+        //console.log
+        console.log(sectorAdvNr);
+      if (sectorAdvNr % 2 == 1) {
+          let temp1 = parseInt(sectorAdvNr) - (2 * (nrEtapeNEMOD - etape));          
+          
+          if (temp1 <= 0) {
+            //setTemppp((nrStanduri - tempunu));
+            temp1 = nrStanduri - temp1;
+          }
+          //setActualSectorAdversar(temp1);
+          console.log(temp1);
+
+          return temp1.toString();
+        } 
+        else {
+         // setTemp2(sectorAdversar + 2 * (nrEtapeNEMOD - etape));
+         let temp2 = parseInt(sectorAdvNr) + 2 * (nrEtapeNEMOD - etape);
+         //console.log(sectorAdvNr);
+         //console.log(sectorAdvNr + 2 * (nrEtapeNEMOD - etape));
+        // console.log(temp2);
+         if (temp2 > nrStanduri) {
+           // setTemp2( temp2-nrStanduri);
+           temp2 = temp2 - nrStanduri;
+          }
+         // setActualSectorAdversar(temp2);
+         //setActualSectorAdversar(temp2);
+         console.log(temp2);
+         return temp2.toString();
+        }
+        
+    
+        // Fetch cod_secret for the actualSectorAdversar
+        //console.log(actualSectorAdversar);
+        //console.log("haidiiii");
+        
+
+       // return 1;
     }
+
+
+
+    
+    const sendEtapaSQL = async () => {
+      try {
+        //let tempSectorAdversar;
+        //const grr = sectorToReal();
+
+       // getCodeStand();
+       //const sectorAdev= sectorToReal();
+       //console.log(typeof sectorAdev);
+       //console.log(sectorAdev);
+
+       //const codStandReal = getCodeStand();
+       //console.log(typeof codStandReal);
+       //console.log("Cod stand real"+codStandReal);
+
+        console.log(typeof codSecretAdversar);
+        console.log(typeof codSecretAdversarReal);
+        console.log(codSecretAdversar == codSecretAdversarReal.toString());
+
+        if (codSecretAdversar == codSecretAdversarReal.toString()) { // Check your condition here
+          const trimtRezultatEtapa = await BackendService.addEtapa(
+            storageStand,
+            sectorAdversar,
+            capturiProprii,
+            capturiAdversar,
+            nrPuncte,
+            mentiuniAdversar,
+            codSecretAdversar
+          );
+          console.log(trimtRezultatEtapa);
+          alert("Etapa cu nr. " + nrMansa + " a fost trimisa cu succes.");
+        } else {
+          alert("Etapa cu nr. " + nrMansa + " NU A FOST TRIMISA");
+        }
+     } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while sending the stage.");
+      }
+    };
+    
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -99,6 +338,10 @@ function Conectat({}) { //formData
             mentiuniAdversar,
             //codSecretAdversar
         ];
+        
+
+        const trimis = sendEtapaSQL();
+
         setRows([...rows, newRow]);
         setNrMansa(nrMansa+1);
         setEtape(etape-1);
@@ -110,7 +353,12 @@ function Conectat({}) { //formData
         setNrPuncte('');
         setMentiuniAdversar('');
         setCodSecretAdversar('');
-    };
+         
+    }
+
+        
+
+
 
 
     //const timpClass = new HelloWorldClass();
@@ -138,7 +386,8 @@ return (
                 <div className='sector-concurent'>sector de start {storageStand}</div>
             </div>
             <div className='etape-ramase'>
-                Etape ramase: {etape}
+                Etape ramase: {etape}<br></br>
+                Nr. mansa: {nrMansa}
             </div>
         </div>
         <div className='column'>
