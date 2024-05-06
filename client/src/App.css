@@ -1,63 +1,140 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/*.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+input {
+  margin: 5px 0;
+}
+button {
+  cursor: pointer;
+}*/
+.container-mare{
+  position: absolute; /* Use absolute positioning */
+  top: 0px; /* Position it 50% from the top */
+  left: 0px; /* Position it 50% from the left */
+  /*transform: translate(-50%, -50%);  Center it both horizontally and vertically */
+  padding: 0px;
+  padding-top: 10px;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  width: 100vw;
+}
+
+.container-nume{
+  display: flex;
+  position: sticky;
+  justify-content: center;
+  align-items: flex-start;
+  width:100vw; 
+  top: 0;
+  
+  /*border: 2px solid black;*/
+  
+}
+
+.nume-concurs{
+  
+  margin: 0;
+  position: relative;
+  /*top: -100;*/
+  top: 0px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.nume-concurs .nume1{
+  font-size: 40px;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.nume-concurs .nume2{
+  font-size: 30px;
+  margin-top: -20px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .dark {
-    display: none; /* Hide light logo in light mode */
-  }
+.login-box{
+  display: flex;
+  position: sticky;
+  justify-content: center;
+  align-items:center;
+  width:80vw; 
+  height: 50vh;
+  margin-top: 50px;
+  border: 3px solid white;
+  border-radius: 20px;
+  
 }
 
-
-@media (prefers-color-scheme: light) {
-  .light {
-    display: none; /* Hide dark logo in dark mode */
-  }
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.input-box {
-  width: 25%;
-  border-radius: 5px;
-  box-shadow: none !important;
-  border: 2px solid #888;
+.login-box form{
+  display: flex;
+  flex-direction: column;
+  align-items:center;
   padding: 10px;
+}
+
+.nrsector-input{
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+.nrsector-input label{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
+  font-size: 30px;
+}
+.nrsector-input input{
+  text-align: center;
+  font-size: 20px;
+}
+
+
+.numeprenume-input{
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+}
+.numeprenume-input label{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.numeprenume-input input{
+  text-align: center;
+  font-size: 20px;
+}
+
+.password-input{
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+.password-input label{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.password-input input{
+  text-align: center;
+  font-size: 20px;
+}
+
+.login-box form button{
+  font-size: 20px;
+  height: 50px;
+  border-radius: 20px;
 }

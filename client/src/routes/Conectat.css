@@ -1,0 +1,174 @@
+.box-informatii {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 30vh;
+    top: 0;
+    left: 0;
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.date-concurent,
+.ora-data,
+.etape-ramase,
+.adauga-mansa {
+    box-sizing: border-box;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid white;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.date-concurent {
+    height: 160px;
+}
+
+/*.ora-data {
+    height: 100px;
+}*/
+
+.etape-ramase {
+    height: 100px;
+}
+
+.adauga-mansa {
+    height: 160px;
+}
+
+    
+
+
+p{
+    margin: 0px;   
+  padding: 0px;  
+}
+
+.custom-table {
+    top:40%;
+    width: 200%;
+    
+    border-collapse:collapse;
+    position: sticky; 
+    color: black;
+}
+
+.custom-table thead {
+    position: relative;
+    top: 0; /* Fix the header at the top */
+    background-color: #f2f2f2;
+    z-index: 1; /* Ensure the header stays above the tbody */
+    color: black;
+}
+
+/*.custom-table tbody {
+    max-height: 100%;  Example max height 
+    overflow-y:auto;  Enable vertical scrolling for tbody 
+}*/
+
+/*     SPATIERE PENTRU TABELA        */
+.custom-table th:nth-child(1){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 50px;
+    color: black;
+    
+}
+ .custom-table td:nth-child(1) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 50px;
+    color: white;
+    
+}
+.custom-table th:nth-child(2){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 70px;
+    color: black;
+    
+} .custom-table td:nth-child(2) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 70px;
+    color: white;
+}
+.custom-table th:nth-child(3){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 80px;
+    color: black;
+    
+} .custom-table td:nth-child(3) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 80px;
+    color: white;
+}
+.custom-table th:nth-child(4){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 80px;
+    color: black;
+    
+} .custom-table td:nth-child(4) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 80px;
+    color: white;
+}
+.custom-table th:nth-child(5){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 70px;
+    color: black;
+    
+} .custom-table td:nth-child(5) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 70px;
+    color: white;
+}
+.custom-table th:nth-child(6){
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    
+    color: black;
+    
+} .custom-table td:nth-child(6) {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    color: white;
+}
+
+
+
+
+/*
+.flex-container {
+    
+    display: flex;
+    flex: 1;
+    margin: 0 10px;
+    margin-top: 10px;
+}*/
