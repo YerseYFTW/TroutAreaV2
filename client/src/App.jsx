@@ -47,6 +47,7 @@ function App({}) { //setFormData
         alert(`Error! ${error.message}`);
       }
     };
+
     useEffect(() => {
       console.log(loginSignin);
       const fetchCode = async () => {
@@ -58,6 +59,14 @@ function App({}) { //setFormData
         setInregistratValue(inregistratt);
         console.log("Value of cod_privat:", codSecretValuee);
         console.log("Value of inregistrat:", inregistratt);
+
+
+        const numeSql = await BackendService.getNumeStand(NrSector);
+        const jsonNumeSql = JSON.parse(numeSql);
+        const numeFinalSql = jsonNumeSql.rows[0].nume;
+        console.log("Nume final din SQL: "+numeFinalSql);
+        setNumePrenume(numeFinalSql);
+
       };
       fetchCode();
     }, [NrSector]);
@@ -117,6 +126,7 @@ function App({}) { //setFormData
         localStorage.removeItem('storedStand');
         localStorage.removeItem('storedNume');
         localStorage.setItem('storedStand', NrSector);
+        
         localStorage.setItem('storedNume', NumePrenume);
 
         // Simulate an API call or any asynchronous operation

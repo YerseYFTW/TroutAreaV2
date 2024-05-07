@@ -62,6 +62,21 @@ export class BackendService {
   }
 
   @GenezioMethod()
+  async getNumeStand(stand: string): Promise<string> {
+    const nume = await this.pool.query("select nume from participanti where stand_start=$1",[stand]);
+
+    return JSON.stringify(nume);
+  }
+
+  @GenezioMethod()
+  async getClasament():Promise<string>{
+    const clasament = await this.pool.query("select nume,capturi_total,puncte_total from participanti order by puncte_total desc, capturi_total desc");
+  
+    return JSON.stringify(clasament);
+  }
+
+
+  @GenezioMethod()
   async addParticipant(nume:string,stand:string,cheie:string): Promise<string> {
     try{
     const registerr = await this.pool.query("insert into participanti (nume,stand_start,cod_secret,capturi_total,puncte_total)values($1,$2,$3,0,0)",[nume,stand,cheie]);

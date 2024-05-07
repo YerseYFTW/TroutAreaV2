@@ -11,9 +11,11 @@ function Conectat() { //formData
     //const location = useLocation();
     const nrEtapeNEMOD = 13;
     const nrStanduri = 40;
-    const [updatat,setUpdatat] = useState(false);
+    //const [updatat,setUpdatat] = useState(false);
     const [data, setData] = useState(null);
+    const [dataClasament, setDataClasament] = useState(null);
     const [rows, setRows] = useState([]);
+    const [rowsPlasament, setRowsPlasament] = useState([]);
     const [etape, setEtape] = useState(13);
     const [nrMansa, setNrMansa] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,11 +93,31 @@ function Conectat() { //formData
         //console.log(standToUse);
         const numeToUse = localStorage.getItem('storedNume');
         setStorageNume(numeToUse);
+        
 
-        if(!data){
-          fetchRezultate();
+        //const grgr = fetchRezultate();
+        //setData
+        setData('34');
+       // console.log(data);
+        if(!data || data=='null' ){
+          const grr = async () => {
+            const ftt = await fetchRezultate();
+            //console.log(ftt)
+            return ftt;
+          }
+          //setData('34');
+         // console.log(data);
+         const yy = grr();
+         setData(yy);
+         console.log(yy);
+          
           //InsertRowsTakenSQL();
         }
+       // console.log(data);
+
+        
+        
+        
         //if(data !=null && updatat == false){
        //   InsertRowsTakenSQL();
         //  setUpdatat(true);
@@ -110,60 +132,90 @@ function Conectat() { //formData
        // console.log(meciuriLuate);
       }); 
 
-      const fetchRezultate = async () => {
+      useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const grgr = await fetchRezultate();
+      setData(grgr);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+      useEffect(()=>{
+        if(!dataClasament && !data ){ 
+          fetchRezultateClasament();
+        }
+      },[data]);
+
+    const fetchRezultate = async () => {
         
         const toate_meciurile= await BackendService.getMeciuri(storageStand);
         //console.log(toate_meciurile);
         //setMeciuriLuate(toate_meciurile);
-        const response = JSON.parse(toate_meciurile);
-        setData(response);
-        console.log(response);
-        console.log(response.length);
-
-        const randuri = await InsertRowsTakenSQL(response);
+        const response =  JSON.parse(toate_meciurile);
+        
+        //console.log(response);
+        //console.log(response.length);
+        //console.log(data);
+        if(response.length>0 && !data){
+          //setData(response);
+          //console.log(data);
+        const randuri =  await InsertRowsTakenSQL(response);
         console.log(randuri);
+        }
+        
         //console.log(meciuriLuate);
         //return toate_meciurile;
         
     };
-  //useEffect(() => {
-      
-      //console.log(data);
-      
-  //},[data]);
-    //setNr(34);
-    
 
+    const fetchRezultateClasament = async () => {
+        //console.log("clasament");
+      const toate_meciurilee= await BackendService.getClasament();
+      //console.log("CLASAMENTTT: "+ toate_meciurile);
+      //console.log(toate_meciurile);
+      //setMeciuriLuate(toate_meciurile);
+      const responsee =  JSON.parse(toate_meciurilee);
+      //console.log(response.rows);
+      //console.log(typeof response);
+      setDataClasament(responsee);
+      //console.log(dataClasament);
+      //console.log(dataClasament);
+     // console.log(dataClasament);
+      //console.log(response.length);
+
+      if(responsee.rows.length>0 && !dataClasament){
+
+      const clasament =  await InsertPlasamentTakenSQL(responsee.rows);
+      console.log(clasament);
+    }
+      
+    };
+
+ 
       const fetchCodeReal = async () => {
         try{
         
           const tempSecReal = await sectorToReal();
-          //console.log("TEMPPPPPPP CODEEEEE  "+ tempSecReal);
-          //console.log(typeof tempSecReal);
-          //console.log(tempSecReal);
-          //setActualSectorAdversar(tempSecReal);
-          //console.log(actualSectorAdversar);
+
           const response = await BackendService.getCode(tempSecReal);
           //console.log(response)
           const jsonObject = JSON.parse(response);
           const codSecretAdversar = jsonObject.rows[0].cod_privat;
-          //codtemp1 = codSecretAdversar.toString();
-          // Now you can compare codSecretAdversar with your local codSecretAdversar
-          //console.log("Retrieved cod_secret for sector:", codtemp1);
-          //setCodSecretAdversarReal(codtemp1);
-          //console.log(codSecretAdversarReal);
-          //return codSecretAdversar;
+
           return codSecretAdversar;
         
       }catch{}
       };
 
-     
-    
-    
-
       const InsertRowsTakenSQL = async (datat) => {
-        console.log(datat.length);
+        //console.log(datat.length);
+       // setData(datat);
+        if(datat.length>0){
         for(let i=0;i<datat.length;i++){
           const newRow = [
             i+1, 
@@ -176,17 +228,44 @@ function Conectat() { //formData
             //codSecretAdversar
         ];
         setRows(prevRows => [...prevRows, newRow]); // Append newRow to the existing rows
-        //const grr = await numere();
-       // setUpdatat(grr);
-        //console.log(grr + i);
+
         setNrMansa(prevNrMansa => prevNrMansa + 1); // Update nrMansa by the length of the data array
         setEtape(prevEtape => prevEtape - 1);
       }
-         //setRows([...rows, newRow]);
+      return "randurile au fost inserate"
+      }
+      
         
-        //setIsModalOpen(false);
+      };
+      
+      const InsertPlasamentTakenSQL = async (datat) => {
+        console.log(datat);
+        //console.log(datat.length);
+        //let adminon = datat.length;
+       // console.log(storageStand == '');
+        //if(storageStand=="admin"){
+        //  adminon=adminon -1;
+        //}
         
-        return "randurile au fost inserate"
+        //console.log(dataClasament);
+        if(datat != []){
+        for(let i=0;i<datat.length;i++){
+          const newRowPlasament = [
+            i+1, 
+            datat[i].nume,
+            datat[i].capturi_total,
+            datat[i].puncte_total
+            //item.
+            //codSecretAdversar
+        ];
+        setRowsPlasament(prevRows => [...prevRows, newRowPlasament]); // Append newRow to the existing rows
+        //setRowsPlasament
+        //setNrMansa(prevNrMansa => prevNrMansa + 1); // Update nrMansa by the length of the data array
+        //setEtape(prevEtape => prevEtape - 1);
+      }
+      return "clasamentul a fost inserat"
+        }
+        
       };
 
       /*useEffect(() => {
@@ -243,11 +322,8 @@ function Conectat() { //formData
     const sectorToReal = async () =>{
 
         let sectorAdvNr = sectorAdversar.toString();//parseInt(
-        //let temp1 = 0;
-        //let temp2 = 0;
-        //console.log("sector adv: "+sectorAdvNr );
-        //console.log
-        console.log(sectorAdvNr);
+
+        //console.log(sectorAdvNr);
       if (sectorAdvNr % 2 == 1) {
           let temp1 = parseInt(sectorAdvNr) - (2 * (nrEtapeNEMOD - etape));          
           
@@ -255,52 +331,27 @@ function Conectat() { //formData
             //setTemppp((nrStanduri - tempunu));
             temp1 = nrStanduri - temp1;
           }
-          //setActualSectorAdversar(temp1);
-          console.log(temp1);
+
+         // console.log(temp1);
 
           return temp1.toString();
         } 
         else {
-         // setTemp2(sectorAdversar + 2 * (nrEtapeNEMOD - etape));
+
          let temp2 = parseInt(sectorAdvNr) + 2 * (nrEtapeNEMOD - etape);
-         //console.log(sectorAdvNr);
-         //console.log(sectorAdvNr + 2 * (nrEtapeNEMOD - etape));
-        // console.log(temp2);
+
          if (temp2 > nrStanduri) {
-           // setTemp2( temp2-nrStanduri);
+
            temp2 = temp2 - nrStanduri;
           }
-         // setActualSectorAdversar(temp2);
-         //setActualSectorAdversar(temp2);
-         console.log(temp2);
+
+         //console.log(temp2);
          return temp2.toString();
         }
-        
-    
-        // Fetch cod_secret for the actualSectorAdversar
-        //console.log(actualSectorAdversar);
-        //console.log("haidiiii");
-        
-
-       // return 1;
     }
 
-
-
-    
     const sendEtapaSQL = async () => {
       try {
-        //let tempSectorAdversar;
-        //const grr = sectorToReal();
-
-       // getCodeStand();
-       //const sectorAdev= sectorToReal();
-       //console.log(typeof sectorAdev);
-       //console.log(sectorAdev);
-
-       //const codStandReal = getCodeStand();
-       //console.log(typeof codStandReal);
-       //console.log("Cod stand real"+codStandReal);
 
         console.log(typeof codSecretAdversar);
         console.log(typeof codSecretAdversarReal);
@@ -384,8 +435,8 @@ return (
     <div className='box-informatii'>
         <div className='column'>
             <div className='date-concurent'>
-                <div  className='nume-concurent'>nume concurent:{storageNume}</div>
-                <div className='sector-concurent'>sector de start {storageStand}</div>
+                <div  className='nume-concurent'>Nume concurent: <br></br>{storageNume}</div>
+                <div className='sector-concurent'>Sector de start: {storageStand}</div>
             </div>
             <div className='etape-ramase'>
                 Etape ramase: {etape}<br></br>
@@ -421,8 +472,28 @@ return (
                     </tr>
                 ))}
             </tbody>
+        </table>       
+    </div>
+    <div className='tabela1'>
+    <table className="tabela-rezultate">
+            <thead>
+                <tr>
+                    <th>Loc</th>
+                    <th>Nume Prenume</th>
+                    <th>Capturi</th>
+                    <th>Puncte</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rowsPlasament.map((row, index) => (
+                    <tr key={index}>
+                        {row.map((cell, idx) => (
+                            <td key={idx}>{cell}</td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
         </table>
-            
     </div>
     {isModalOpen && (
         <div className="modal-overlay">

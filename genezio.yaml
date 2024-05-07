@@ -45,4 +45,4 @@ frontend:
     start:
       - npm install --silent
       - npm run dev --silent
-  subdomain: jade-upset-grouse
+  subdomain: cup-titd-zavoi
